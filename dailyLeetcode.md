@@ -172,3 +172,44 @@ vector<vector<int>> levelOrder(TreeNode* root) {
 }
 ```
 
+
+
+##### 前序与中序 构造二叉树
+
+ 
+
+```c++
+	unordered_map<int, int> index;
+
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if (preorder.size()==0)
+            return NULL;
+        
+        int size = preorder.size();
+
+        for (int i = 0; i<size; i++) {
+            index[inorder[i]] = i;
+        } 
+
+        return build(preorder, 0, size -1, inorder, 0, size-1);
+    }
+
+    TreeNode* build(const vector<int>& preorder, int pre_left, int pre_right, const vector<int>& inorder, int in_left, int in_right) {
+        if (pre_left > pre_right)
+            return NULL;
+
+        int pre_root = pre_left;
+        int in_root = index[preorder[pre_root]];
+
+        TreeNode* root = new TreeNode(preorder[pre_root]);
+
+        int left_size = in_root - in_left;
+
+        root->left = build(preorder, pre_left + 1, pre_left + left_size, inorder, in_left, in_root -1);
+        root->right = build(preorder, pre_left + left_size + 1, pre_right, inorder, in_root + 1, in_right);
+
+        return root;
+    }
+```
+
